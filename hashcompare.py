@@ -40,23 +40,51 @@ for path, dirs, files in os.walk(first_path):
 
 
 print("Comparing %i files at random ..." % num_checks)
+successcount = 0
+failcount = 0
 for idx in range(num_checks):
     rndfile = random.choice(allfiles)
-    file_one = open(os.path.join(first_path, rndfile), 'rb')
-    file_two = open(os.path.join(second_path, rndfile), 'rb')
+    try:
+        file_one = open(os.path.join(first_path, rndfile), 'rb')
+    except:
+        sys.stderr.write("Error opening file %s\n" % (file_one))
+        raise
+    try:
+        file_two = open(os.path.join(second_path, rndfile), 'rb')
+    except:
+        sys.stderr.write("Error opening file %s\n" % (file_two))
+        raise
     while True:
-        data_one = file_one.read(128)
-        data_two = file_two.read(128)
+        try:
+            data_one = file_one.read(128)
+        except:
+            sys.stdderr.write("Error reading file %s" % (file_one))
+            raise
+        try:
+            data_two = file_two.read(128)
+        except:
+            sys.stdderr.write("Error reading file %s" % (file_two))
+            raise
         if not data_one:
             break
         hash_one = hashlib.md5(data_one).hexdigest()
         hash_two = hashlib.md5(data_two).hexdigest()
         if hash_one != hash_two:
-            print("MD5 mismatch in file pair: %s - %s" % (
+            print("\n%i/%i: MD5 mismatch in file pair: %s - %s" % (
+                                    idx+1, num_checks,
                                     file_one.name, file_two.name))
+            failcount += 1
             continue
-    print("Success: File %s matches %s" % (file_one.name, file_two.name))
-    print("\n-----------\n")
+    print("\n%i/%i: Success: File %s matches %s" % (
+                        idx+1, num_checks,
+                        file_one.name, file_two.name))
+    print("\n-----------")
+    successcount += 1
+
+print("\nDone!")
+print("%i out of %i files checked matched (%i mismatches)" % (
+                    successcount, num_checks, failcount))
+
 
 
 
