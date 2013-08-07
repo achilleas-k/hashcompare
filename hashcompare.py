@@ -26,9 +26,16 @@ second_path = sys.argv[2]
 num_checks = int(sys.argv[3])
 
 print("Building file list ...")
-allfiles = [os.path.join(path.replace(first_path, "", 1), filename)
-         for path, dirs, files in os.walk(first_path)
-         for filename in files]
+#allfiles = [os.path.join(path.replace(first_path, "", 1), filename)
+#         for path, dirs, files in os.walk(first_path)
+#         for filename in files]
+
+allfiles = []
+for path, dirs, files in os.walk(first_path):
+    for filename in files:
+        allfiles.append(os.path.join(path.replace(first_path+"/", "", 1), filename))
+        sys.stdout.write("%i ...\r" % (len(allfiles)))
+        sys.stdout.flush()
 
 
 
@@ -49,6 +56,7 @@ for idx in range(num_checks):
                                     file_one.name, file_two.name))
             continue
     print("Success: File %s matches %s" % (file_one.name, file_two.name))
+    print("\n-----------\n")
 
 
 
