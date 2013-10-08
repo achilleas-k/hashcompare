@@ -1,7 +1,7 @@
 hashcompare
 ===========
 
-Compare random files in two directory trees using md5
+Compare a random subset of files in two directory trees using md5
 
 The intended use case is comparing copies of large directories which contain a
 very large number of files, where one-to-one comparison would take too long.
